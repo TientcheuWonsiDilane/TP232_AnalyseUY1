@@ -9,3 +9,5 @@ age,filiere,niveau,heures_etude,connexion,pc,transport,sommeil,mgp,stress,presen
 20,Physique,Licence 2,6,Modem,Non,40,5,2-2.24,6,68,Masculin
 22,Biologie,Licence 3,5,Donnees Mobiles,Non,30,4,1.5-1.99,7,60,Feminin
 20,Chimie,Licence 1,9,Donnees Mobiles,Non,25,6,2.25-2.49,7,72,Feminin
+20,Informatique,Licence 2,31,Donnees Mobiles,Oui,20,4,2.5-2.74,3,90,Masculin
+20,Informatique,Licence 1,5,Donnees Mobiles,Oui,20,6,1-1.49,5,65,Masculin

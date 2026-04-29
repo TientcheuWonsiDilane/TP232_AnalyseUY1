@@ -3,6 +3,7 @@ import pandas as pd
 import streamlit as st
 import plotly.express as px
 from io import StringIO
+import re
 
 st.set_page_config(
     page_title="UYI Data Analysis",
@@ -16,7 +17,7 @@ st.markdown("""
         background-color: #f0f2f6;
     }
     .hero-section {
-        background: linear-gradient(rgba(31, 59, 115, 0.9), rgba(31, 59, 115, 0.6)), 
+        background: linear-gradient(rgba(31, 59, 115, 0.8), rgba(31, 59, 115, 0.5)), 
                     url('https://res.cloudinary.com/db2aanter/image/upload/v1777477400/Image11-1024x676_sxxnnb.png');
         background-size: cover;
         background-position: center;
@@ -46,17 +47,30 @@ st.markdown("""
             font-size: 24px;
         }
     }
+    
+    /* Remove sidebar */
+    section[data-testid="stSidebar"] {
+        display: none;
+    }
+    
+    /* Adjust main content to full width */
+    .main .block-container {
+        max-width: 1200px;
+        padding-top: 2rem;
+        padding-bottom: 2rem;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 DATA_FILE = "data_uy1.csv"
+MATRICULES_FILE = "matricules.csv"
 EXPECTED_COLUMNS = [
     "age", "filiere", "niveau", "heures_etude", "connexion", 
     "pc", "transport", "sommeil", "mgp", "stress", "presence", "sexe"
 ]
 
 FILIERES = [
-    "Informatique", "Mathématiques", "Physique", "ICT4D", "Biologie", 
+    "Informatique", "Mathematiques", "Physique", "ICT4D", "Biologie", 
     "Chimie", "Ingenierie (ENSPY)", "Energies Renouvelables", "Histoire", 
     "Langues (Anglais/Allemand etc.)", "Geographie", "Philosophie", 
     "Psychologie", "Sociologie", "Biochimie"
@@ -67,6 +81,9 @@ MGP_LIST = ["1-1.49", "1.5-1.99", "2-2.24", "2.25-2.49", "2.5-2.74", "2.75-2.99"
 def initialise_data():
     if not os.path.exists(DATA_FILE) or os.stat(DATA_FILE).st_size == 0:
         pd.DataFrame(columns=EXPECTED_COLUMNS).to_csv(DATA_FILE, index=False)
+    
+    if not os.path.exists(MATRICULES_FILE) or os.stat(MATRICULES_FILE).st_size == 0:
+        pd.DataFrame(columns=["matricule", "date_soumission"]).to_csv(MATRICULES_FILE, index=False)
 
 def load_data():
     initialise_data()
@@ -76,8 +93,29 @@ def save_row(row):
     df = pd.DataFrame([row])
     df.to_csv(DATA_FILE, mode="a", header=False, index=False)
 
+def check_matricule_exists(matricule):
+    if not os.path.exists(MATRICULES_FILE) or os.stat(MATRICULES_FILE).st_size == 0:
+        return False
+    
+    df = pd.read_csv(MATRICULES_FILE)
+    return matricule in df["matricule"].values
+
+def save_matricule(matricule):
+    from datetime import datetime
+    df = pd.DataFrame([[matricule, datetime.now().strftime("%Y-%m-%d %H:%M:%S")]], 
+                      columns=["matricule", "date_soumission"])
+    df.to_csv(MATRICULES_FILE, mode="a", header=False, index=False)
+
+def validate_matricule_format(matricule):
+    pattern = r'^\d{2}[A-Z]\d{4}$'
+    return bool(re.match(pattern, matricule))
+
 if 'user_df' not in st.session_state:
     st.session_state.user_df = None
+if 'authenticated' not in st.session_state:
+    st.session_state.authenticated = False
+if 'user_matricule' not in st.session_state:
+    st.session_state.user_matricule = ""
 
 st.markdown(f"""
 <div class="hero-section">
@@ -95,7 +133,6 @@ choice = st.radio(
     horizontal=True
 )
 
-
 st.markdown("""
 <style>
     .custom-form {
@@ -105,45 +142,90 @@ st.markdown("""
         box-shadow: 0 10px 30px rgba(0,0,0,0.1);
     }
     
-    /* Your input styles here */
+    .stSlider .stSlider > div > div {
+        background-color: #4facfe !important;
+    }
+    
+    .stSlider .stSlider > div > div > div {
+        background-color: #1f3b73 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
 if choice == "Questionnaire":
-    st.subheader("Formulaire Academique")
     
-    with st.form("survey_form"):
-        c1, c2, c3 = st.columns(3)
+    if not st.session_state.authenticated:
+        st.subheader("Authentification requise")
+        st.markdown("Veuillez entrer votre matricule pour acceder au questionnaire")
         
-        with c1:
-            age = st.number_input("Age", 15, 60, 20)
-            sexe = st.selectbox("Sexe", ["Masculin", "Feminin"])
-            filiere = st.selectbox("Filiere", FILIERES)
-            niveau = st.selectbox("Niveau", ["Licence 1", "Licence 2", "Licence 3", "Master 1", "Master 2", "Doctorat"])
+        with st.form("auth_form"):
+            matricule_input = st.text_input(
+                "Matricule", 
+                placeholder="Exemple: 24H2589", 
+                max_chars=20,
+                help="Format: 2 chiffres + 1 lettre + 4 chiffres (ex: 00A0000)"
+            )
+            submit_auth = st.form_submit_button("Verifier mon matricule", use_container_width=True)
+            
+            if submit_auth:
+                if not matricule_input:
+                    st.error("Veuillez entrer votre matricule")
+                elif not validate_matricule_format(matricule_input):
+                    st.error("Matricule invalide. Utilisez le format: 2 chiffres + 1 lettre + 4 chiffres")
+                elif check_matricule_exists(matricule_input):
+                    st.error(f"Le matricule {matricule_input} a deja rempli le formulaire. Chaque etudiant ne peut participer qu'une seule fois.")
+                else:
+                    st.session_state.user_matricule = matricule_input
+                    st.session_state.authenticated = True
+                    st.success(f"Matricule {matricule_input} verifie. Vous pouvez maintenant remplir le formulaire.")
+                    st.rerun()
+    
+    elif st.session_state.authenticated:
+        
+        st.subheader("Formulaire Academique")
+        
+        col1, col2 = st.columns([3, 1])
+        with col2:
+            if st.button("Se deconnecter", use_container_width=True):
+                st.session_state.authenticated = False
+                st.session_state.user_matricule = ""
+                st.rerun()
+        
+        with st.form("survey_form"):
+            c1, c2, c3 = st.columns(3)
+            
+            with c1:
+                age = st.number_input("Age", 15, 60, 20)
+                sexe = st.selectbox("Sexe", ["Masculin", "Feminin"])
+                filiere = st.selectbox("Filiere", FILIERES)
+                niveau = st.selectbox("Niveau", ["Licence 1", "Licence 2", "Licence 3", "Master 1", "Master 2", "Doctorat"])
 
-        with c2:
-            heures_etude = st.slider("Heures d'etude / semaine", 0, 50, 5)
-            connexion = st.selectbox("Connexion principale", ["Donnees Mobiles", "Modem (Orange/MTN/...)", "Satellite (Starlink/...)", "Wi-Fi Campus"])
-            pc = st.radio("Avez-vous un ordinateur ?", ["Oui", "Non"])
-            transport = st.slider("Temps de transport (min/jour)", 0, 90, 20)
+            with c2:
+                heures_etude = st.slider("Heures d'etude / semaine", 0, 50, 5)
+                connexion = st.selectbox("Connexion principale", ["Donnees Mobiles", "Modem (Orange/MTN/...)", "Satellite (Starlink/...)", "Wi-Fi Campus"])
+                pc = st.radio("Avez-vous un ordinateur ?", ["Oui", "Non"])
+                transport = st.slider("Temps de transport (min/jour)", 0, 90, 20)
 
-        with c3:
-            sommeil = st.slider("Heures de sommeil / nuit", 3, 10, 6)
-            mgp = st.selectbox("MGP", MGP_LIST)
-            stress = st.slider("Niveau de stress (1-10)", 1, 10, 3)
-            presence = st.slider("Taux de presence en cours (%)", 0, 100, 50)
+            with c3:
+                sommeil = st.slider("Heures de sommeil / nuit", 3, 10, 6)
+                mgp = st.selectbox("MGP", MGP_LIST)
+                stress = st.slider("Niveau de stress (1-10)", 1, 10, 5)
+                presence = st.slider("Taux de presence en cours (%)", 0, 100, 65)
 
-        submit = st.form_submit_button("Enregistrer")
+            submit = st.form_submit_button("Enregistrer")
 
-        if submit:
-            save_row({
-                "age": age, "filiere": filiere, "niveau": niveau, "heures_etude": heures_etude,
-                "connexion": connexion, "pc": pc, "transport": transport, "sommeil": sommeil,
-                "mgp": mgp, "stress": stress, "presence": presence, "sexe": sexe
-            })
-            st.success("Donnees enregistrees avec succes !")
-            st.session_state.user_df = None
-            st.rerun()
+            if submit:
+                save_row({
+                    "age": age, "filiere": filiere, "niveau": niveau, "heures_etude": heures_etude,
+                    "connexion": connexion, "pc": pc, "transport": transport, "sommeil": sommeil,
+                    "mgp": mgp, "stress": stress, "presence": presence, "sexe": sexe
+                })
+                save_matricule(st.session_state.user_matricule)
+                st.success("Donnees enregistrees avec succes !")
+                st.session_state.user_df = None
+                st.session_state.authenticated = False
+                st.session_state.user_matricule = ""
+                st.rerun()
 
 else:
     st.subheader("Ajoutez votre propre dataset")
@@ -189,6 +271,9 @@ else:
                 st.session_state.user_df = user_df
                 st.rerun()
 
+st.markdown("---")
+st.header("Analyses des Donnees")
+
 df_to_show = st.session_state.user_df if st.session_state.user_df is not None else load_data()
 
 if len(df_to_show) > 0:
@@ -214,7 +299,8 @@ if len(df_to_show) > 0:
     if "stress" in df_to_show.columns:
         df_to_show["stress"] = pd.to_numeric(df_to_show["stress"], errors='coerce')
         mean_filiere = df_to_show.groupby("filiere")["stress"].mean()
-        st.error(f"Filiere la plus stressante : {mean_filiere.idxmax()}")
+        if not mean_filiere.empty:
+            st.error(f"Filiere la plus stressante : {mean_filiere.idxmax()}")
     
     g1, g2 = st.columns(2)
     
@@ -292,7 +378,7 @@ if len(df_to_show) > 0:
         
         st.plotly_chart(fig_heatmap, use_container_width=True)
         
-        st.info("Interpretation: rouge = forte correlation positive,  bleu = forte correlation negative")
+        st.info("Interpretation: rouge = forte correlation positive, bleu = forte correlation negative")
         
         st.subheader("Correlations Fortes")
         col1, col2 = st.columns(2)
@@ -319,4 +405,4 @@ if len(df_to_show) > 0:
     st.markdown('</div>', unsafe_allow_html=True)
 
 else:
-    st.info("Aucune donnee disponible. Veuillez remplir le questionnaire ou importer des donnees.")
+    st.info("Aucune donnee disponible. Les premieres donnees apparaitront ici apres le premier questionnaire.")
