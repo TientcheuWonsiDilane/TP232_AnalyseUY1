@@ -95,6 +95,20 @@ choice = st.radio(
     horizontal=True
 )
 
+
+st.markdown("""
+<style>
+    .custom-form {
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        padding: 30px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    
+    /* Your input styles here */
+</style>
+""", unsafe_allow_html=True)
+
 if choice == "Questionnaire":
     st.subheader("Formulaire Academique")
     
