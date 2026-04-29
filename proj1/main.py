@@ -385,8 +385,8 @@ if len(df_to_show) > 0:
         
         corr_unstacked = corr_matrix.unstack()
         corr_unstacked = corr_unstacked[corr_unstacked < 1]
-        strongest_pos = corr_unstacked.nlargest(3)
-        strongest_neg = corr_unstacked.nsmallest(3)
+        strongest_pos = corr_unstacked.nlargest(5)
+        strongest_neg = corr_unstacked.nsmallest(5)
         
         with col1:
             st.markdown("Fortes correlations positives:")
