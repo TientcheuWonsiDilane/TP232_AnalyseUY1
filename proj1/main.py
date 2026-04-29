@@ -6,7 +6,7 @@ from io import StringIO
 
 st.set_page_config(
     page_title="UYI Data Analysis",
-    page_icon="hat.png",
+    page_icon=":material/school:",
     layout="wide"
 )
 
@@ -17,7 +17,7 @@ st.markdown("""
     }
     .hero-section {
         background: linear-gradient(rgba(31, 59, 115, 0.9), rgba(31, 59, 115, 0.6)), 
-                    url('https://uy1.passresto.com/wp-content/uploads/2026/03/Image11-1024x676.png');
+                    url('https://res.cloudinary.com/db2aanter/image/upload/v1777477400/Image11-1024x676_sxxnnb.png');
         background-size: cover;
         background-position: center;
         padding: 60px;
