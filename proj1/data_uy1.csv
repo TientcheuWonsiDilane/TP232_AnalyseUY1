@@ -1,0 +1,11 @@
+age,filiere,niveau,heures_etude,connexion,pc,transport,sommeil,mgp,stress,presence,sexe
+20,Informatique,Licence 3,12,Satellite,Oui,25,5,2.75-2.99,7,55,Masculin
+21,Ingenierie (ENSPY),Master 1,15,Wi-Fi Campus,Oui,30,5,3-3.24,8,50,Masculin
+19,Informatique,Licence 2,8,Donnees Mobiles,Oui,40,4,2.25-2.49,6,45,Masculin
+22,Ingenierie (ENSPY),Licence 3,10,Wi-Fi Campus,Oui,25,5,2.5-2.74,7,48,Feminin
+20,Psychologie,Licence 1,5,Donnees Mobiles,Non,40,6,1.5-1.99,6,70,Feminin
+21,Sociologie,Licence 2,4,Donnees Mobiles,Non,37,5,1-1.49,4,65,Feminin
+19,Mathematiques,Licence 1,7,Donnees Mobiles,Non,35,6,2-2.24,5,75,Masculin
+20,Physique,Licence 2,6,Modem,Non,40,5,2-2.24,6,68,Masculin
+22,Biologie,Licence 3,5,Donnees Mobiles,Non,30,4,1.5-1.99,7,60,Feminin
+20,Chimie,Licence 1,9,Donnees Mobiles,Non,25,6,2.25-2.49,7,72,Feminin
