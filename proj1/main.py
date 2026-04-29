@@ -17,7 +17,7 @@ st.markdown("""
     }
     .hero-section {
         background: linear-gradient(rgba(31, 59, 115, 0.9), rgba(31, 59, 115, 0.6)), 
-                    url('https://uy1.passresto.com/wp-content/uploads/2026/03/Image11-1024x676.png?auto=format&fit=crop&q=80');
+                    url('https://uy1.passresto.com/wp-content/uploads/2026/03/Image11-1024x676.png');
         background-size: cover;
         background-position: center;
         padding: 60px;
