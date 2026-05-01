@@ -78,42 +78,58 @@ FILIERES = [
 
 MGP_LIST = ["1-1.49", "1.5-1.99", "2-2.24", "2.25-2.49", "2.5-2.74", "2.75-2.99", "3-3.24", "3.25-3.74", "3.75-4"]
 
+MGP_LIST = ["1-1.49", "1.5-1.99", "2-2.24", "2.25-2.49", "2.5-2.74", "2.75-2.99", "3-3.24", "3.25-3.5", "3.5-4"]
+
+# DONNEES PAR DEFAUT (toujours incluses dans les analyses)
+DEFAULT_DATA = [
+    [22,"Ingenierie (ENSPY)","Master 1",35,"Wi-Fi Campus","Oui",15,5,"3.25-3.5",9,75,"Masculin"],
+    [21,"Ingenierie (ENSPY)","Licence 3",30,"Wi-Fi Campus","Oui",20,5,"3-3.24",9,70,"Feminin"],
+    [23,"Ingenierie (ENSPY)","Master 2",40,"Modem","Oui",10,4,"3.25-3.5",10,80,"Masculin"],
+    [20,"Ingenierie (ENSPY)","Licence 2",28,"Wi-Fi Campus","Oui",25,5,"2.75-2.99",8,65,"Feminin"],
+    [22,"Informatique","Master 1",32,"Satellite","Oui",20,5,"3-3.24",8,72,"Masculin"],
+    [21,"Informatique","Licence 3",28,"Modem","Oui",25,5,"2.75-2.99",8,68,"Feminin"],
+    [20,"Informatique","Licence 2",25,"Donnees Mobiles","Oui",30,5,"2.5-2.74",7,65,"Masculin"],
+    [22,"Informatique","Licence 3",30,"Modem","Oui",20,4,"3-3.24",9,70,"Feminin"],
+    [21,"Mathematiques","Master 1",25,"Donnees Mobiles","Oui",30,6,"2.75-2.99",7,65,"Masculin"],
+    [20,"Mathematiques","Licence 3",22,"Donnees Mobiles","Oui",35,6,"2.5-2.74",7,60,"Feminin"],
+    [22,"Mathematiques","Licence 2",20,"Donnees Mobiles","Non",40,6,"2.25-2.49",6,55,"Masculin"],
+    [20,"Mathematiques","Licence 1",18,"Donnees Mobiles","Non",45,6,"2-2.24",6,50,"Feminin"],
+    [21,"Physique","Master 1",20,"Wi-Fi Campus","Oui",40,7,"2.5-2.74",6,58,"Masculin"],
+    [20,"Physique","Licence 3",18,"Donnees Mobiles","Non",45,7,"2.25-2.49",5,55,"Feminin"],
+    [22,"Physique","Licence 2",15,"Donnees Mobiles","Non",50,7,"2-2.24",5,50,"Masculin"],
+    [21,"Chimie","Licence 3",18,"Donnees Mobiles","Oui",45,7,"2.25-2.49",5,55,"Feminin"],
+    [20,"Chimie","Licence 2",15,"Donnees Mobiles","Non",50,7,"2-2.24",5,50,"Masculin"],
+    [22,"Biologie","Master 1",15,"Donnees Mobiles","Non",55,8,"2-2.24",4,48,"Feminin"],
+    [21,"Biologie","Licence 3",12,"Wifi Campus","Non",60,8,"1.75-1.99",4,45,"Masculin"],
+    [20,"Biologie","Licence 2",10,"Donnees Mobiles","Non",65,8,"1.5-1.74",4,42,"Feminin"]
+]
+
 def initialise_data():
-    default_data = [
-        [22,"Ingenierie (ENSPY)","Master 1",35,"Wi-Fi Campus","Oui",15,5,"3.25-3.5",9,75,"Masculin"],
-        [21,"Ingenierie (ENSPY)","Licence 3",30,"Wi-Fi Campus","Oui",20,5,"3-3.24",9,70,"Feminin"],
-        [23,"Ingenierie (ENSPY)","Master 2",40,"Wi-Fi Campus","Oui",10,4,"3.25-3.5",10,80,"Masculin"],
-        [20,"Ingenierie (ENSPY)","Licence 2",28,"Modem","Oui",25,5,"2.75-2.99",8,65,"Feminin"],
-        [22,"Informatique","Master 1",32,"Modem","Oui",20,5,"3-3.24",8,72,"Masculin"],
-        [21,"Informatique","Licence 3",28,"Wi-Fi Campus","Oui",25,5,"2.75-2.99",8,68,"Feminin"],
-        [20,"Informatique","Licence 2",25,"Donnees Mobiles","Oui",30,5,"2.5-2.74",7,65,"Masculin"],
-        [22,"Informatique","Licence 3",30,"Satellite","Oui",20,4,"3-3.24",9,70,"Feminin"],
-        [21,"Mathematiques","Master 1",25,"Modem","Oui",30,6,"2.75-2.99",7,65,"Masculin"],
-        [20,"Mathematiques","Licence 3",22,"Donnees Mobiles","Oui",35,6,"2.5-2.74",7,60,"Feminin"],
-        [22,"Mathematiques","Licence 2",20,"Wi-Fi Campus","Non",40,6,"2.25-2.49",6,55,"Masculin"],
-        [20,"Mathematiques","Licence 1",18,"Donnees Mobiles","Non",45,6,"2-2.24",6,50,"Feminin"],
-        [21,"Physique","Master 1",20,"Modem","Oui",40,7,"2.5-2.74",6,58,"Masculin"],
-        [20,"Physique","Licence 3",18,"Donnees Mobiles","Non",45,7,"2.25-2.49",5,55,"Feminin"],
-        [22,"Physique","Licence 2",15,"Donnees Mobiles","Non",50,7,"2-2.24",5,50,"Masculin"],
-        [21,"Chimie","Licence 3",18,"Donnees Mobiles","Oui",45,7,"2.25-2.49",5,55,"Feminin"],
-        [20,"Chimie","Licence 2",15,"Donnees Mobiles","Non",50,7,"2-2.24",5,50,"Masculin"],
-        [22,"Biologie","Master 1",15,"Donnees Mobiles","Non",55,8,"2-2.24",4,48,"Feminin"],
-        [21,"Biologie","Licence 3",12,"Wifi Campus","Non",60,8,"1.75-1.99",4,45,"Masculin"],
-        [20,"Biologie","Licence 2",10,"Donnees Mobiles","Non",65,8,"1.5-1.74",4,42,"Feminin"]
-    ]
+    if not os.path.exists(DATA_FILE):
+        pd.DataFrame(columns=EXPECTED_COLUMNS).to_csv(DATA_FILE, index=False)
     
-    # Initialiser le fichier principal
-    if not os.path.exists(DATA_FILE) or os.stat(DATA_FILE).st_size == 0:
-        df_default = pd.DataFrame(default_data, columns=EXPECTED_COLUMNS)
-        df_default.to_csv(DATA_FILE, index=False)
-    
-    
-    if not os.path.exists(MATRICULES_FILE) or os.stat(MATRICULES_FILE).st_size == 0:
+    if not os.path.exists(MATRICULES_FILE):
         pd.DataFrame(columns=["matricule", "date_soumission"]).to_csv(MATRICULES_FILE, index=False)
 
 def load_data():
     initialise_data()
-    return pd.read_csv(DATA_FILE)
+    
+    file_data = pd.DataFrame()
+    if os.path.exists(DATA_FILE) and os.stat(DATA_FILE).st_size > 0:
+        try:
+            file_data = pd.read_csv(DATA_FILE)
+        except:
+            file_data = pd.DataFrame()
+    
+    df_default = pd.DataFrame(DEFAULT_DATA, columns=EXPECTED_COLUMNS)
+    
+    if not file_data.empty:
+        combined_data = pd.concat([df_default, file_data], ignore_index=True)
+        combined_data = combined_data.drop_duplicates()
+    else:
+        combined_data = df_default
+    
+    return combined_data
 
 def save_row(row):
     df = pd.DataFrame([row])
