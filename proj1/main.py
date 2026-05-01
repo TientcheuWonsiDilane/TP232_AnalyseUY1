@@ -427,6 +427,9 @@ if len(df_to_show) > 0:
         
         corr_unstacked = corr_matrix.unstack()
         corr_unstacked = corr_unstacked[corr_unstacked < 1]
+        corr_unstacked = corr_unstacked[
+        corr_unstacked.index.get_level_values(0) < corr_unstacked.index.get_level_values(1)
+]
         strongest_pos = corr_unstacked.nlargest(5)
         strongest_neg = corr_unstacked.nsmallest(5)
         
