@@ -1,0 +1,31 @@
+# /home/dilane/Desktop/streamlit/proj1/.github/workflows/keepalive.yml
+name: Keep Streamlit App Awake
+
+on:
+  schedule:
+    - cron: '0 */1 * * *'
+  workflow_dispatch:
+
+jobs:
+  wake-app:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      
+      - name: Install Playwright
+        run: |
+          pip install playwright
+          playwright install chromium
+      
+      - name: Wake Streamlit App
+        run: python keepalive.py
+        env:
+          STREAMLIT_URL: "https://tientcheu-wonsi-dilane-24h2589.streamlit.app"  # CHANGE THIS!
